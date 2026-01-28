@@ -1,4 +1,4 @@
-name: Update Subscriptions
+name: Global Subscription Update
 on:
   schedule:
     - cron: '0 */6 * * *'
@@ -8,12 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run Script
-        run: node index.js
-      - name: Deploy
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Run Generator
+        run: |
+          cd generator
+          node index.js
+      - name: Commit and Push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add sub_*.txt sub_*.json index.html
-          git commit -m "Update all files" || exit 0
+          git add index.html configs/*.txt configs/*.json
+          git commit -m "Update Panel and Subscriptions" || exit 0
           git push
