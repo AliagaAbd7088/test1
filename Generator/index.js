@@ -5,18 +5,15 @@ const cleanIPs = require('./ips.js');
 const githubRawBase = "https://raw.githubusercontent.com/AliagaAbd7088/test1/main/Configs/";
 
 const subLinks = [
+    "https://raw.githubusercontent.com/freefq/free/master/v2",
+    "https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
+    "https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
+    "https://raw.githubusercontent.com/AzadNetCH/Clash/main/V2Ray.txt"
 ];
 const cnfLinks = [
-    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html",
-    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html",
-    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html",
-    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html",
-    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/shadowsocks.txt",
-    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/trojan.txt",
-    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/vless.txt",
-    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/vmess.txt"
+    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sub_merge.txt",
+    "https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all"
 ];
-
 
 const configDir = path.join(__dirname, '../Configs');
 if (!fs.existsSync(configDir)) fs.mkdirSync(configDir);
@@ -24,10 +21,12 @@ if (!fs.existsSync(configDir)) fs.mkdirSync(configDir);
 const toFa = (n) => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
 function safeDecode(text) {
-    if (text.includes("://")) return text;
-    try {
-        return Buffer.from(text, 'base64').toString('utf-8');
-    } catch { return text; }
+    if (text.match(/^[a-zA-Z0-9+\/]+={0,2}$/)) {
+        try {
+            return Buffer.from(text, 'base64').toString('utf-8');
+        } catch { return text; }
+    }
+    return text;
 }
 
 async function start() {
@@ -36,8 +35,6 @@ async function start() {
     const lastUpdateFa = now.toLocaleString('fa-IR', { timeZone: 'Asia/Tehran' });
     const lastUpdateEn = now.toLocaleString('en-US', { timeZone: 'Asia/Tehran' });
 
-    console.log("Starting to fetch subscriptions...");
-
     for (const link of [...subLinks, ...cnfLinks]) {
         try {
             const res = await fetch(link);
@@ -45,7 +42,7 @@ async function start() {
             const text = await res.text();
             let decoded = safeDecode(text);
             allConfigs.push(...decoded.split(/\r?\n/));
-        } catch (e) { console.log(`Error fetching ${link}`); }
+        } catch (e) {}
     }
 
     const processed = allConfigs.map(line => {
@@ -60,64 +57,58 @@ async function start() {
                 let obj = JSON.parse(Buffer.from(b64, 'base64').toString('utf-8'));
                 
                 const originalAdd = obj.add;
-                
                 obj.add = cleanIp;
-                
                 obj.port = obj.port ? obj.port : 443;
 
-                if (!obj.host && (obj.net === "ws" || obj.net === "h2" || obj.net === "http" || obj.net === "grpc")) {
-                    obj.host = originalAdd;
-                }
+                if (!obj.host) obj.host = originalAdd;
+                if (!obj.sni) obj.sni = originalAdd;
                 
-                if (!obj.sni && (obj.tls === "tls" || obj.tls === "reality")) {
-                    obj.sni = originalAdd;
-                }
-
                 obj.ps = obj.ps || "Config";
-
                 return "vmess://" + Buffer.from(JSON.stringify(obj)).toString('base64');
             } catch (e) { return null; }
         } 
         
-        if (line.startsWith("vless://") || line.startsWith("trojan://") || line.startsWith("ss://")) {
+        if (line.startsWith("vless://") || line.startsWith("trojan://")) {
             try {
                 let url = new URL(line);
-                
                 const originalHost = url.hostname;
-                
                 url.hostname = cleanIp;
-                
                 if (!url.port) url.port = "443";
 
-                if (!line.startsWith("ss://")) {
-                    if (!url.searchParams.get("sni")) {
-                        url.searchParams.set("sni", originalHost);
-                    }
-                    
-                    if (!url.searchParams.get("host")) {
-                        const type = url.searchParams.get("type");
-                        const security = url.searchParams.get("security");
-                        
-                        if (type === "ws" || type === "http" || type === "grpc" || type === "httpupgrade") {
-                             url.searchParams.set("host", originalHost);
-                        }
-                    }
+                if (!url.searchParams.get("sni")) {
+                    url.searchParams.set("sni", originalHost);
+                }
+                
+                if (!url.searchParams.get("host")) {
+                    url.searchParams.set("host", originalHost);
                 }
 
                 let name = decodeURIComponent(url.hash || "").replace("#", "");
                 url.hash = encodeURIComponent(name || "Config");
 
                 return url.toString();
-            } catch (e) { 
-                return null; 
+            } catch (e) { return null; }
+        }
+
+        if (line.startsWith("ss://")) {
+            try {
+                let url = new URL(line);
+                url.hostname = cleanIp;
+                if (!url.port) url.port = "443";
+                
+                let name = decodeURIComponent(url.hash || "").replace("#", "");
+                url.hash = encodeURIComponent(name || "Config");
+                
+                return url.toString();
+            } catch (e) {
+                return null;
             }
         }
+
         return null;
     }).filter(Boolean);
 
     const uniqueConfigs = [...new Set(processed)];
-
-    console.log(`Processed ${uniqueConfigs.length} valid configs.`);
 
     const sizes = [50, 100, 200, 300, 500, 700, 1000];
     sizes.forEach(size => {
@@ -126,7 +117,6 @@ async function start() {
         fs.writeFileSync(path.join(configDir, `sub_${size}.json`), JSON.stringify(sliced, null, 2));
     });
 
-    // --- ساخت HTML (بدون تغییر) ---
     const htmlContent = `<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
