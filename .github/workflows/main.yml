@@ -1,25 +1,60 @@
-name: Global Subscription Update
+name: Generate and Deploy Subscription
+
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '*/30 * * * *' # هر ۳۰ دقیقه یکبار اجرا می‌شود
+  push:
+    branches: ["main"]
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+
+      - name: Clean Old Files
+        run: |
+          rm -rf configs
+          rm -f index.html
+          mkdir -p configs
+
       - name: Run Generator
         run: |
           cd generator
           node index.js
-      - name: Commit and Push
+
+      - name: Commit Changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add index.html configs/*.txt configs/*.json
-          git commit -m "Update Panel and Subscriptions" || exit 0
-          git push
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add index.html configs/
+          git commit -m "Update configs $(date)" || exit 0
+          git push origin main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
