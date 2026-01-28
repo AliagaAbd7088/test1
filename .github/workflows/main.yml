@@ -2,7 +2,7 @@ name: Generate and Deploy Subscription
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # هر ۳۰ دقیقه یکبار اجرا می‌شود
+    - cron: '*/30 * * * *'
   push:
     branches: ["main"]
   workflow_dispatch:
@@ -30,9 +30,9 @@ jobs:
 
       - name: Clean Old Files
         run: |
-          rm -rf configs
+          rm -rf Configs
           rm -f index.html
-          mkdir -p configs
+          mkdir -p Configs
 
       - name: Run Generator
         run: |
