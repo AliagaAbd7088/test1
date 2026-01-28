@@ -68,20 +68,21 @@ async function start() {
     <style>
         :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --primary: #2563eb; }
         .dark { --bg: #030712; --card: #111827; --text: #f9fafb; --primary: #3b82f6; }
-        body { background: var(--bg); color: var(--text); font-family: Tahoma, sans-serif; margin: 0; padding: 20px; transition: 0.3s; }
-        .container { max-width: 800px; margin: auto; }
-        .header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; border-radius: 24px; margin-bottom: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .update-time { font-size: 0.85em; background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 50px; margin-top: 15px; display: inline-block; }
-        .accordion { background: var(--card); border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(128,128,128,0.1); overflow: hidden; transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); font-family: Tahoma, sans-serif; margin: 0; padding: 20px; transition: 0.3s; line-height: 1.6; }
+        .container { max-width: 850px; margin: auto; }
+        .header { text-align: center; padding: 35px 25px; background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; border-radius: 24px; margin-bottom: 25px; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4); }
+        .info-text { background: rgba(255, 255, 255, 0.15); padding: 15px; border-radius: 15px; font-size: 0.95em; margin: 15px 0; border: 1px solid rgba(255,255,255,0.2); text-align: justify; }
+        .client-tag { background: #ffd700; color: #000; padding: 2px 8px; border-radius: 5px; font-weight: bold; font-size: 0.85em; }
+        .update-time { font-size: 0.85em; background: rgba(0,0,0,0.3); padding: 6px 16px; border-radius: 50px; display: inline-block; }
+        .accordion { background: var(--card); border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(128,128,128,0.1); overflow: hidden; }
         .acc-header { padding: 18px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .acc-header:hover { background: rgba(0,0,0,0.02); }
         .acc-content { display: none; padding: 20px; background: rgba(128,128,128,0.03); border-top: 1px solid rgba(128,128,128,0.05); }
-        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
         button, .btn { padding: 12px; border-radius: 10px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; font-size: 13px; font-weight: bold; text-decoration: none; text-align: center; transition: 0.2s; }
         button:hover { background: var(--primary); color: white; }
-        .footer { text-align: center; margin-top: 40px; padding: 20px; font-size: 15px; border-top: 1px solid rgba(128,128,128,0.1); }
+        .footer { text-align: center; margin-top: 40px; padding: 25px; font-size: 16px; border-top: 1px solid rgba(128,128,128,0.1); font-weight: bold; }
         .qr-box { display: none; text-align: center; margin-top: 15px; background: white; padding: 15px; border-radius: 12px; }
-        .controls { position: fixed; top: 20px; left: 20px; display: flex; gap: 10px; }
+        .controls { position: fixed; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -89,6 +90,9 @@ async function start() {
     <div class="container">
         <div class="header">
             <h1 id="title">پنل هوشمند ساب‌سکریپشن</h1>
+            <div class="info-text" id="info">
+                این پنل هر ۲۴ ساعت آی‌پی‌های تمیز را آپدیت می‌کند. این سیستم هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class="client-tag">V2RayN</span> <span class="client-tag">V2RayNG</span> <span class="client-tag">Hiddify</span>
+            </div>
             <div class="update-time" id="utime">آخرین بروزرسانی: ${lastUpdateFa}</div>
         </div>
         ${sizes.map(size => `
@@ -99,7 +103,7 @@ async function start() {
             </div>
             <div class="acc-content">
                 <div class="btn-grid">
-                    <button class="b-copy" onclick="copy('configs/sub_${size}.txt')">کپی لینک (Xray/SingBox)</button>
+                    <button class="b-copy" onclick="copy('configs/sub_${size}.txt')">کپی لینک ساب‌سکریپشن</button>
                     <button class="b-qr" onclick="showQR('configs/sub_${size}.txt', 'qr-${size}')">نمایش QR Code</button>
                     <a href="configs/sub_${size}.json" class="btn b-dl" download>دانلود JSON</a>
                 </div>
@@ -111,14 +115,27 @@ async function start() {
     <script>
         let currentLang = 'fa';
         const data = {
-            en: { title: "Smart Subscription Panel", utime: "Last Update: ${lastUpdateEn}", footer: "Developed with ❤️ by ༺Ali™ Linux CS༻", copy: "Copy Link", qr: "Show QR", dl: "Download JSON", sub: "Subscription" },
-            fa: { title: "پنل هوشمند ساب‌سکریپشن", utime: "آخرین بروزرسانی: ${lastUpdateFa}", footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻", copy: "کپی لینک (Xray/SingBox)", qr: "نمایش QR Code", dl: "دانلود JSON", sub: "ساب‌سکریپشن" }
+            en: { 
+                title: "Smart Subscription Panel", 
+                utime: "Last Update: ${lastUpdateEn}", 
+                info: "This panel updates clean IPs every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
+                footer: "Developed with ❤️ by ༺Ali™ Linux CS༻", 
+                copy: "Copy Sub Link", qr: "Show QR", dl: "Download JSON", sub: "Subscription" 
+            },
+            fa: { 
+                title: "پنل هوشمند ساب‌سکریپشن", 
+                utime: "آخرین بروزرسانی: ${lastUpdateFa}", 
+                info: "این پنل هر ۲۴ ساعت آی‌پی‌های تمیز را آپدیت می‌کند. این سیستم هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
+                footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻", 
+                copy: "کپی لینک ساب‌سکریپشن", qr: "نمایش QR Code", dl: "دانلود JSON", sub: "ساب‌سکریپشن" 
+            }
         };
         const toFa = (n) => n.toString().replace(/\\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
         function toggleLang() {
             currentLang = currentLang === 'fa' ? 'en' : 'fa';
             document.body.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
             document.getElementById('title').innerText = data[currentLang].title;
+            document.getElementById('info').innerHTML = data[currentLang].info;
             document.getElementById('utime').innerText = data[currentLang].utime;
             document.getElementById('footer').innerText = data[currentLang].footer;
             document.querySelectorAll('.b-copy').forEach(b => b.innerText = data[currentLang].copy);
@@ -131,7 +148,7 @@ async function start() {
         }
         function copy(path) {
             const url = window.location.origin + window.location.pathname.replace('index.html', '') + path;
-            navigator.clipboard.writeText(url); alert(currentLang === 'fa' ? 'کپی شد!' : 'Copied!');
+            navigator.clipboard.writeText(url); alert(currentLang === 'fa' ? 'لینک کپی شد!' : 'Link Copied!');
         }
         function showQR(path, id) {
             const el = document.getElementById(id);
