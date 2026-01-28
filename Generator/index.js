@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const cleanIPs = require('./ips.js');
 
-// آدرس پایه برای فایل‌های Raw شما در گیت‌هاب
 const githubRawBase = "https://raw.githubusercontent.com/AliagaAbd7088/test1/main/Configs/";
 
 const subLinks = [
@@ -45,8 +44,6 @@ async function start() {
             try {
                 let obj = JSON.parse(Buffer.from(line.replace("vmess://", ""), 'base64').toString('utf-8'));
                 obj.add = cleanIp;
-                obj.port = obj.port && obj.port !== 0 ? obj.port : 443;
-                // حذف هرگونه نام اضافه - فقط نام اصلی
                 obj.ps = obj.ps || "Config"; 
                 return "vmess://" + Buffer.from(JSON.stringify(obj)).toString('base64');
             } catch { return null; }
@@ -56,7 +53,6 @@ async function start() {
             try {
                 let url = new URL(line);
                 url.hostname = cleanIp;
-                if (!url.port || url.port === "0") url.port = "443";
                 return url.toString();
             } catch { return null; }
         }
