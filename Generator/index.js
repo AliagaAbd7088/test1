@@ -43,7 +43,10 @@ async function start() {
             try {
                 let obj = JSON.parse(Buffer.from(line.replace("vmess://", ""), 'base64').toString('utf-8'));
                 obj.add = cleanIp;
-                obj.ps = (obj.ps || "Config") + " ༻Ali™༺";
+                // حفظ پورت اصلی یا ست کردن 443
+                obj.port = obj.port && obj.port !== 0 ? obj.port : 443;
+                // اصلاح نام: قرار دادن برند شما در ابتدا بدون آی‌پی
+                obj.ps = "༻Ali™༺ " + (obj.ps || "Config");
                 return "vmess://" + Buffer.from(JSON.stringify(obj)).toString('base64');
             } catch { return null; }
         } 
@@ -52,7 +55,10 @@ async function start() {
             try {
                 let url = new URL(line);
                 url.hostname = cleanIp;
-                url.hash = encodeURIComponent(decodeURIComponent(url.hash || "#Config").replace("#", "") + " ༻Ali™༺");
+                if (!url.port || url.port === "0") url.port = "443";
+                // اصلاح نام در بخش Hash
+                let originalName = decodeURIComponent(url.hash || "#Config").replace("#", "");
+                url.hash = encodeURIComponent("༻Ali™༺ " + originalName);
                 return url.toString();
             } catch { return null; }
         }
@@ -73,6 +79,7 @@ async function start() {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Config Generator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --primary: #2563eb; }
         .dark { --bg: #030712; --card: #111827; --text: #f9fafb; --primary: #3b82f6; }
@@ -89,6 +96,7 @@ async function start() {
         button, .btn { padding: 12px; border-radius: 10px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; font-size: 13px; font-weight: bold; text-decoration: none; text-align: center; transition: 0.2s; }
         button:hover { background: var(--primary); color: white; }
         .footer { text-align: center; margin-top: 40px; padding: 25px; font-size: 16px; border-top: 1px solid rgba(128,128,128,0.1); font-weight: bold; }
+        .footer a { color: inherit; text-decoration: none; margin-top: 10px; display: inline-block; }
         .qr-box { display: none; text-align: center; margin-top: 15px; background: white; padding: 15px; border-radius: 12px; }
         .controls { position: fixed; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; }
     </style>
@@ -100,9 +108,9 @@ async function start() {
     </div>
     <div class="container">
         <div class="header">
-            <h1 id="title">پنل هوشمند ساب‌سکریپشن</h1>
+            <h1 id="title">تولید کننده کانفیگ</h1>
             <div class="info-text" id="info">
-                آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی <span class="client-tag">V2RayN</span> <span class="client-tag">V2RayNG</span> <span class="client-tag">Hiddify</span>
+                آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class="client-tag">V2RayN</span> <span class="client-tag">V2RayNG</span> <span class="client-tag">Hiddify</span>
             </div>
             <div class="update-time" id="utime">آخرین بروزرسانی: ${lastUpdateFa}</div>
         </div>
@@ -121,23 +129,28 @@ async function start() {
                 <div id="qr-${size}" class="qr-box"></div>
             </div>
         </div>`).join('')}
-        <div class="footer" id="footer">توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻</div>
+        <div class="footer" id="footer">
+            توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻ <br>
+            <a href="https://github.com/YOUR_GITHUB_ID" target="_blank">
+                <i class="fab fa-github"></i> GitHub Profile
+            </a>
+        </div>
     </div>
     <script>
         let currentLang = 'fa';
         const data = {
             en: { 
-                title: "Smart Subscription Panel", 
+                title: "Config Generator", 
                 utime: "Last Update: ${lastUpdateEn}", 
-                info: "This panel clean IPs update every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
-                footer: "Developed with ❤️ by ༺Ali™ Linux CS༻", 
+                info: "This panel clean IPs update every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
+                footer: "Developed with ❤️ by ༺Ali™ Linux CS༻ <br> <a href='https://github.com/YOUR_GITHUB_ID' target='_blank'><i class='fab fa-github'></i> GitHub Profile</a>", 
                 copy: "Copy Sub Link", qr: "Show QR", dl: "Download JSON", sub: "Subscription" 
             },
             fa: { 
-                title: "پنل هوشمند ساب‌سکریپشن", 
+                title: "تولید کننده کانفیگ", 
                 utime: "آخرین بروزرسانی: ${lastUpdateFa}", 
-                info: "آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
-                footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻", 
+                info: "آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
+                footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻ <br> <a href='https://github.com/YOUR_GITHUB_ID' target='_blank'><i class='fab fa-github'></i> GitHub Profile</a>", 
                 copy: "کپی لینک ساب‌سکریپشن", qr: "نمایش QR Code", dl: "دانلود JSON", sub: "ساب‌سکریپشن" 
             }
         };
@@ -148,7 +161,7 @@ async function start() {
             document.getElementById('title').innerText = data[currentLang].title;
             document.getElementById('info').innerHTML = data[currentLang].info;
             document.getElementById('utime').innerText = data[currentLang].utime;
-            document.getElementById('footer').innerText = data[currentLang].footer;
+            document.getElementById('footer').innerHTML = data[currentLang].footer;
             document.querySelectorAll('.b-copy').forEach(b => b.innerText = data[currentLang].copy);
             document.querySelectorAll('.b-qr').forEach(b => b.innerText = data[currentLang].qr);
             document.querySelectorAll('.b-dl').forEach(b => b.innerText = data[currentLang].dl);
