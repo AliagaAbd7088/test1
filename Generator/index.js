@@ -2,15 +2,17 @@ const fs = require('fs');
 const path = require('path');
 const cleanIPs = require('./ips.js');
 
+// آدرس پایه برای فایل‌های Raw شما در گیت‌هاب
+const githubRawBase = "https://raw.githubusercontent.com/AliagaAbd7088/test1/main/Configs/";
+
 const subLinks = [
-    "https://raw.githubusercontent.com/freefq/free/master/v2",
-    "https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
-    "https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
-    "https://raw.githubusercontent.com/AzadNetCH/Clash/main/V2Ray.txt"
+    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/refs/heads/main/subscriptions/v2ray/super-sub.txt"
 ];
 const cnfLinks = [
-    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sub_merge.txt",
-    "https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all"
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html"
 ];
 
 const configDir = path.join(__dirname, '../Configs');
@@ -43,10 +45,9 @@ async function start() {
             try {
                 let obj = JSON.parse(Buffer.from(line.replace("vmess://", ""), 'base64').toString('utf-8'));
                 obj.add = cleanIp;
-                // حفظ پورت اصلی یا ست کردن 443
                 obj.port = obj.port && obj.port !== 0 ? obj.port : 443;
-                // اصلاح نام: قرار دادن برند شما در ابتدا بدون آی‌پی
-                obj.ps = "༻Ali™༺ " + (obj.ps || "Config");
+                // حذف هرگونه نام اضافه - فقط نام اصلی
+                obj.ps = obj.ps || "Config"; 
                 return "vmess://" + Buffer.from(JSON.stringify(obj)).toString('base64');
             } catch { return null; }
         } 
@@ -56,9 +57,6 @@ async function start() {
                 let url = new URL(line);
                 url.hostname = cleanIp;
                 if (!url.port || url.port === "0") url.port = "443";
-                // اصلاح نام در بخش Hash
-                let originalName = decodeURIComponent(url.hash || "#Config").replace("#", "");
-                url.hash = encodeURIComponent("༻Ali™༺ " + originalName);
                 return url.toString();
             } catch { return null; }
         }
@@ -77,7 +75,7 @@ async function start() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Config Generator</title>
+    <title>تولید کننده کانفیگ</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -122,8 +120,8 @@ async function start() {
             </div>
             <div class="acc-content">
                 <div class="btn-grid">
-                    <button class="b-copy" onclick="copy('Configs/sub_${size}.txt')">کپی لینک ساب‌سکریپشن</button>
-                    <button class="b-qr" onclick="showQR('Configs/sub_${size}.txt', 'qr-${size}')">نمایش QR Code</button>
+                    <button class="b-copy" onclick="copy('sub_${size}.txt')">کپی لینک ساب‌سکریپشن</button>
+                    <button class="b-qr" onclick="showQR('sub_${size}.txt', 'qr-${size}')">نمایش QR Code</button>
                     <a href="Configs/sub_${size}.json" class="btn b-dl" download>دانلود JSON</a>
                 </div>
                 <div id="qr-${size}" class="qr-box"></div>
@@ -131,26 +129,27 @@ async function start() {
         </div>`).join('')}
         <div class="footer" id="footer">
             توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻ <br>
-            <a href="https://github.com/YOUR_GITHUB_ID" target="_blank">
-                <i class="fab fa-github"></i> GitHub Profile
+            <a href="https://github.com/AliagaAbd7088" target="_blank">
+                <i class="fab fa-github"></i> پروفایل گیت‌هاب
             </a>
         </div>
     </div>
     <script>
         let currentLang = 'fa';
+        const rawBase = "${githubRawBase}";
         const data = {
             en: { 
                 title: "Config Generator", 
                 utime: "Last Update: ${lastUpdateEn}", 
                 info: "This panel clean IPs update every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
-                footer: "Developed with ❤️ by ༺Ali™ Linux CS༻ <br> <a href='https://github.com/YOUR_GITHUB_ID' target='_blank'><i class='fab fa-github'></i> GitHub Profile</a>", 
+                footer: "Developed with ❤️ by ༺Ali™ Linux CS༻ <br> <a href='https://github.com/AliagaAbd7088' target='_blank'><i class='fab fa-github'></i> GitHub Profile</a>", 
                 copy: "Copy Sub Link", qr: "Show QR", dl: "Download JSON", sub: "Subscription" 
             },
             fa: { 
                 title: "تولید کننده کانفیگ", 
                 utime: "آخرین بروزرسانی: ${lastUpdateFa}", 
                 info: "آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
-                footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻ <br> <a href='https://github.com/YOUR_GITHUB_ID' target='_blank'><i class='fab fa-github'></i> GitHub Profile</a>", 
+                footer: "توسعه یافته با ❤️ توسط ༺Ali™ Linux CS༻ <br> <a href='https://github.com/AliagaAbd7088' target='_blank'><i class='fab fa-github'></i> پروفایل گیت‌هاب</a>", 
                 copy: "کپی لینک ساب‌سکریپشن", qr: "نمایش QR Code", dl: "دانلود JSON", sub: "ساب‌سکریپشن" 
             }
         };
@@ -170,14 +169,14 @@ async function start() {
                 t.innerText = currentLang === 'fa' ? data.fa.sub + ' ' + toFa(s) + ' کانفیگ' : data.en.sub + ' ' + s + ' Configs';
             });
         }
-        function copy(path) {
-            const url = window.location.origin + window.location.pathname.replace('index.html', '') + path;
-            navigator.clipboard.writeText(url); alert(currentLang === 'fa' ? 'لینک کپی شد!' : 'Link Copied!');
+        function copy(fileName) {
+            const url = rawBase + fileName;
+            navigator.clipboard.writeText(url); alert(currentLang === 'fa' ? 'لینک مستقیم گیت‌هاب کپی شد!' : 'Raw GitHub Link Copied!');
         }
-        function showQR(path, id) {
+        function showQR(fileName, id) {
             const el = document.getElementById(id);
             if(el.style.display === 'block') { el.style.display = 'none'; return; }
-            const url = window.location.origin + window.location.pathname.replace('index.html', '') + path;
+            const url = rawBase + fileName;
             el.innerHTML = ''; const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
             el.innerHTML = qr.createImgTag(5); el.style.display = 'block';
         }
