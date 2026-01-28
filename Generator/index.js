@@ -5,7 +5,6 @@ const cleanIPs = require('./ips.js');
 const githubRawBase = "https://raw.githubusercontent.com/AliagaAbd7088/test1/main/Configs/";
 
 const subLinks = [
-    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/refs/heads/main/subscriptions/v2ray/super-sub.txt"
 ];
 const cnfLinks = [
     "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html",
@@ -182,3 +181,4 @@ async function start() {
     fs.writeFileSync(path.join(__dirname, '../index.html'), htmlContent);
 }
 start();
+
