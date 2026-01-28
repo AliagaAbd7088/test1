@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        :root { --bg: #f0f2f5; --card: #ffffff; --text: #1c1e21; --primary: #007bff; --accent: #28a745; }
+        .dark { --bg: #18191a; --card: #242526; --text: #e4e6eb; --primary: #2d8cf0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; transition: 0.3s; margin: 0; padding: 15px; }
+        .container { max-width: 900px; margin: auto; }
+        .header { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border-radius: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid rgba(128,128,128,0.1); }
+        .flex { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        button, .btn { cursor: pointer; padding: 10px 18px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; font-size: 14px; transition: 0.3s; text-decoration: none; }
+        .btn-success { background: var(--accent); }
+        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .qr-box { display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 2px dashed var(--primary); }
+        .controls { position: fixed; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 1000; }
+        .footer { text-align: center; font-size: 14px; margin-top: 40px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="document.body.classList.toggle('dark')">🌓</button>
+        <button onclick="toggleLang()">🌐 EN/FA</button>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1 id="title">پنل مدیریت ساب‌سکریپشن</h1>
+            <p id="credit">توسعه یافته توسط: Me</p>
+        </div>
+        
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 50 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_50.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_50.txt', 'qr-50')">QR Code</button>
+                    <a href="configs/sub_50.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-50" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 100 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_100.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_100.txt', 'qr-100')">QR Code</button>
+                    <a href="configs/sub_100.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-100" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 200 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_200.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_200.txt', 'qr-200')">QR Code</button>
+                    <a href="configs/sub_200.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-200" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 300 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_300.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_300.txt', 'qr-300')">QR Code</button>
+                    <a href="configs/sub_300.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-300" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 500 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_500.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_500.txt', 'qr-500')">QR Code</button>
+                    <a href="configs/sub_500.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-500" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 700 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_700.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_700.txt', 'qr-700')">QR Code</button>
+                    <a href="configs/sub_700.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-700" class="qr-box"></div>
+        </div>
+        <div class="card">
+            <div class="flex">
+                <div>
+                    <strong style="font-size: 18px;">Subscription 1000 Configs</strong>
+                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="copy('configs/sub_1000.txt')">Copy Link</button>
+                    <button class="btn-success" onclick="showQR('configs/sub_1000.txt', 'qr-1000')">QR Code</button>
+                    <a href="configs/sub_1000.json" class="btn" download>Download JSON</a>
+                </div>
+            </div>
+            <div id="qr-1000" class="qr-box"></div>
+        </div>
+        <div class="footer">
+            <p>© 2024 Created by Me | All rights reserved</p>
+        </div>
+    </div>
+    <script>
+        function copy(path) {
+            const fullUrl = window.location.origin + window.location.pathname.replace('index.html', '') + path;
+            navigator.clipboard.writeText(fullUrl);
+            alert('لینک با موفقیت کپی شد!');
+        }
+        function showQR(path, id) {
+            const el = document.getElementById(id);
+            if(el.style.display === 'block') { el.style.display = 'none'; return; }
+            const fullUrl = window.location.origin + window.location.pathname.replace('index.html', '') + path;
+            el.innerHTML = '';
+            const qr = qrcode(0, 'M');
+            qr.addData(fullUrl);
+            qr.make();
+            el.innerHTML = qr.createImgTag(6);
+            el.style.display = 'block';
+        }
+        function toggleLang() {
+            const t = document.getElementById('title');
+            const isFa = t.innerText === 'پنل مدیریت ساب‌سکریپشن';
+            t.innerText = isFa ? 'Subscription Control Panel' : 'پنل مدیریت ساب‌سکریپشن';
+            document.getElementById('credit').innerText = isFa ? 'Developed by: Me' : 'توسعه یافته توسط: Me';
+            document.body.dir = isFa ? 'ltr' : 'rtl';
+        }
+    </script>
+</body>
+</html>
