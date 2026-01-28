@@ -4,160 +4,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Manager</title>
+    <title>Edge Subscription Panel</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
-        :root { --bg: #f0f2f5; --card: #ffffff; --text: #1c1e21; --primary: #007bff; --accent: #28a745; }
-        .dark { --bg: #18191a; --card: #242526; --text: #e4e6eb; --primary: #2d8cf0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; transition: 0.3s; margin: 0; padding: 15px; }
-        .container { max-width: 900px; margin: auto; }
-        .header { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border-radius: 20px; margin-bottom: 30px; }
-        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid rgba(128,128,128,0.1); }
-        .flex { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        button, .btn { cursor: pointer; padding: 10px 18px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; font-size: 14px; transition: 0.3s; text-decoration: none; }
-        .btn-success { background: var(--accent); }
-        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .qr-box { display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 2px dashed var(--primary); }
-        .controls { position: fixed; top: 15px; left: 15px; display: flex; gap: 10px; z-index: 1000; }
-        .footer { text-align: center; font-size: 14px; margin-top: 40px; opacity: 0.7; }
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --primary: #2563eb; --sec: #64748b; }
+        .dark { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --primary: #3b82f6; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 20px; transition: 0.3s; }
+        .container { max-width: 800px; margin: auto; }
+        .header { text-align: center; padding: 30px; background: var(--primary); color: white; border-radius: 20px; margin-bottom: 20px; }
+        .accordion { background: var(--card); border-radius: 12px; margin-bottom: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); }
+        .acc-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .acc-header:hover { background: rgba(0,0,0,0.02); }
+        .acc-content { display: none; padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); background: var(--bg); }
+        .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+        button, .btn { padding: 10px; border-radius: 8px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; text-align: center; text-decoration: none; }
+        button:hover { background: var(--primary); color: white; }
+        .qr-box { display: none; text-align: center; margin-top: 15px; padding: 10px; background: white; border-radius: 10px; }
+        .controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; }
+        .icon { transition: 0.3s; }
+        .open .icon { transform: rotate(180deg); }
     </style>
 </head>
 <body>
-    <div class="controls">
-        <button onclick="document.body.classList.toggle('dark')">🌓</button>
-        <button onclick="toggleLang()">🌐 EN/FA</button>
-    </div>
+    <div class="controls"><button onclick="document.body.classList.toggle('dark')">🌓</button><button onclick="toggleLang()">🌐 EN/FA</button></div>
     <div class="container">
         <div class="header">
-            <h1 id="title">پنل مدیریت ساب‌سکریپشن</h1>
+            <h1 id="title">پنل هوشمند ساب‌سکریپشن</h1>
             <p id="credit">توسعه یافته توسط: Me</p>
         </div>
         
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 50 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_50.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_50.txt', 'qr-50')">QR Code</button>
+        <div class="accordion" id="acc-50">
+            <div class="acc-header" onclick="toggleAcc('50')">
+                <span>Subscription - 50 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-50">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_50.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_50.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_50.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_50.txt', 'qr-50')">Show QR Code</button>
                     <a href="configs/sub_50.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-50" class="qr-box"></div>
             </div>
-            <div id="qr-50" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 100 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_100.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_100.txt', 'qr-100')">QR Code</button>
+        <div class="accordion" id="acc-100">
+            <div class="acc-header" onclick="toggleAcc('100')">
+                <span>Subscription - 100 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-100">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_100.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_100.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_100.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_100.txt', 'qr-100')">Show QR Code</button>
                     <a href="configs/sub_100.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-100" class="qr-box"></div>
             </div>
-            <div id="qr-100" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 200 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_200.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_200.txt', 'qr-200')">QR Code</button>
+        <div class="accordion" id="acc-200">
+            <div class="acc-header" onclick="toggleAcc('200')">
+                <span>Subscription - 200 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-200">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_200.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_200.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_200.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_200.txt', 'qr-200')">Show QR Code</button>
                     <a href="configs/sub_200.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-200" class="qr-box"></div>
             </div>
-            <div id="qr-200" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 300 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_300.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_300.txt', 'qr-300')">QR Code</button>
+        <div class="accordion" id="acc-300">
+            <div class="acc-header" onclick="toggleAcc('300')">
+                <span>Subscription - 300 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-300">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_300.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_300.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_300.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_300.txt', 'qr-300')">Show QR Code</button>
                     <a href="configs/sub_300.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-300" class="qr-box"></div>
             </div>
-            <div id="qr-300" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 500 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_500.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_500.txt', 'qr-500')">QR Code</button>
+        <div class="accordion" id="acc-500">
+            <div class="acc-header" onclick="toggleAcc('500')">
+                <span>Subscription - 500 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-500">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_500.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_500.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_500.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_500.txt', 'qr-500')">Show QR Code</button>
                     <a href="configs/sub_500.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-500" class="qr-box"></div>
             </div>
-            <div id="qr-500" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 700 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_700.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_700.txt', 'qr-700')">QR Code</button>
+        <div class="accordion" id="acc-700">
+            <div class="acc-header" onclick="toggleAcc('700')">
+                <span>Subscription - 700 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-700">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_700.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_700.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_700.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_700.txt', 'qr-700')">Show QR Code</button>
                     <a href="configs/sub_700.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-700" class="qr-box"></div>
             </div>
-            <div id="qr-700" class="qr-box"></div>
         </div>
-        <div class="card">
-            <div class="flex">
-                <div>
-                    <strong style="font-size: 18px;">Subscription 1000 Configs</strong>
-                    <div style="font-size: 12px; opacity: 0.6; margin-top: 5px;">Format: Base64 / JSON</div>
-                </div>
-                <div class="btn-group">
-                    <button onclick="copy('configs/sub_1000.txt')">Copy Link</button>
-                    <button class="btn-success" onclick="showQR('configs/sub_1000.txt', 'qr-1000')">QR Code</button>
+        <div class="accordion" id="acc-1000">
+            <div class="acc-header" onclick="toggleAcc('1000')">
+                <span>Subscription - 1000 Configs</span>
+                <span class="icon">▼</span>
+            </div>
+            <div class="acc-content" id="content-1000">
+                <div class="btn-grid">
+                    <button onclick="copy('configs/sub_1000.txt', 'v2ray')">Copy V2ray/Xray</button>
+                    <button onclick="copy('configs/sub_1000.txt', 'singbox')">Copy Sing-Box</button>
+                    <button onclick="copy('configs/sub_1000.txt', 'clash')">Copy Clash/Hiddify</button>
+                    <button onclick="showQR('configs/sub_1000.txt', 'qr-1000')">Show QR Code</button>
                     <a href="configs/sub_1000.json" class="btn" download>Download JSON</a>
                 </div>
+                <div id="qr-1000" class="qr-box"></div>
             </div>
-            <div id="qr-1000" class="qr-box"></div>
-        </div>
-        <div class="footer">
-            <p>© 2024 Created by Me | All rights reserved</p>
         </div>
     </div>
     <script>
-        function copy(path) {
-            const fullUrl = window.location.origin + window.location.pathname.replace('index.html', '') + path;
-            navigator.clipboard.writeText(fullUrl);
-            alert('لینک با موفقیت کپی شد!');
+        function toggleAcc(size) {
+            const content = document.getElementById('content-' + size);
+            const parent = document.getElementById('acc-' + size);
+            const isOpen = content.style.display === 'block';
+            document.querySelectorAll('.acc-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.accordion').forEach(el => el.classList.remove('open'));
+            if (!isOpen) { content.style.display = 'block'; parent.classList.add('open'); }
+        }
+        function copy(path, type) {
+            const url = window.location.origin + window.location.pathname.replace('index.html', '') + path;
+            navigator.clipboard.writeText(url);
+            alert(type.toUpperCase() + ' Link Copied!');
         }
         function showQR(path, id) {
             const el = document.getElementById(id);
             if(el.style.display === 'block') { el.style.display = 'none'; return; }
-            const fullUrl = window.location.origin + window.location.pathname.replace('index.html', '') + path;
+            const url = window.location.origin + window.location.pathname.replace('index.html', '') + path;
             el.innerHTML = '';
-            const qr = qrcode(0, 'M');
-            qr.addData(fullUrl);
-            qr.make();
-            el.innerHTML = qr.createImgTag(6);
+            const qr = qrcode(0, 'M'); qr.addData(url); qr.make();
+            el.innerHTML = qr.createImgTag(5);
             el.style.display = 'block';
         }
         function toggleLang() {
             const t = document.getElementById('title');
-            const isFa = t.innerText === 'پنل مدیریت ساب‌سکریپشن';
-            t.innerText = isFa ? 'Subscription Control Panel' : 'پنل مدیریت ساب‌سکریپشن';
-            document.getElementById('credit').innerText = isFa ? 'Developed by: Me' : 'توسعه یافته توسط: Me';
+            const isFa = t.innerText === 'پنل هوشمند ساب‌سکریپشن';
+            t.innerText = isFa ? 'Smart Subscription Panel' : 'پنل هوشمند ساب‌سکریپشن';
             document.body.dir = isFa ? 'ltr' : 'rtl';
         }
     </script>
