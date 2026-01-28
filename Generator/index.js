@@ -5,15 +5,18 @@ const cleanIPs = require('./ips.js');
 const githubRawBase = "https://raw.githubusercontent.com/AliagaAbd7088/test1/main/Configs/";
 
 const subLinks = [
-    "https://raw.githubusercontent.com/freefq/free/master/v2",
-    "https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
-    "https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
-    "https://raw.githubusercontent.com/AzadNetCH/Clash/main/V2Ray.txt"
 ];
 const cnfLinks = [
-    "https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sub_merge.txt",
-    "https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all"
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html",
+    "https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html",
+    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/shadowsocks.txt",
+    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/trojan.txt",
+    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/vless.txt",
+    "https://raw.githubusercontent.com/F0rc3Run/F0rc3Run/refs/heads/main/splitted-by-protocol/vmess.txt"
 ];
+
 
 const configDir = path.join(__dirname, '../Configs');
 if (!fs.existsSync(configDir)) fs.mkdirSync(configDir);
@@ -233,3 +236,4 @@ async function start() {
     fs.writeFileSync(path.join(__dirname, '../index.html'), htmlContent);
 }
 start();
+
