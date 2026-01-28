@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Generator
         run: |
-          cd generator
+          cd Generator
           node index.js
 
       - name: Commit Changes
