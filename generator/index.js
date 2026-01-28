@@ -63,7 +63,7 @@ async function start() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ali Linux CS Panel</title>
+    <title>Config generator</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
         :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --primary: #2563eb; }
@@ -89,9 +89,9 @@ async function start() {
     <div class="controls"><button onclick="document.body.classList.toggle('dark')">🌓</button><button onclick="toggleLang()">🌐 EN/FA</button></div>
     <div class="container">
         <div class="header">
-            <h1 id="title">پنل هوشمند ساب‌سکریپشن</h1>
+            <h1 id="title">تولید کننده کانفیگ</h1>
             <div class="info-text" id="info">
-                این پنل هر ۲۴ ساعت آی‌پی‌های تمیز را آپدیت می‌کند. این سیستم هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class="client-tag">V2RayN</span> <span class="client-tag">V2RayNG</span> <span class="client-tag">Hiddify</span>
+                آیپی های تمیز این پنل هر 24 ساعت آپدیت می شود. این پنل هر نیم ساعت آی‌پی‌های تمیز را وارد کانفیگ‌های جمع‌آوری شده از سطح اینترنت می‌کند که می‌تواند باعث بهبود کیفیت اتصال برای شما شود. کلاینت پیشنهادی: <span class="client-tag">V2RayN</span> <span class="client-tag">V2RayNG</span> <span class="client-tag">Hiddify</span>
             </div>
             <div class="update-time" id="utime">آخرین بروزرسانی: ${lastUpdateFa}</div>
         </div>
@@ -118,7 +118,7 @@ async function start() {
             en: { 
                 title: "Smart Subscription Panel", 
                 utime: "Last Update: ${lastUpdateEn}", 
-                info: "This panel updates clean IPs every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
+                info: "This panel clean IPs update every 24 hours. Every 30 minutes, it injects these IPs into configs collected from the web, improving connection quality. Recommended Clients: <span class='client-tag'>V2RayN</span> <span class='client-tag'>V2RayNG</span> <span class='client-tag'>Hiddify</span>",
                 footer: "Developed with ❤️ by ༺Ali™ Linux CS༻", 
                 copy: "Copy Sub Link", qr: "Show QR", dl: "Download JSON", sub: "Subscription" 
             },
@@ -163,3 +163,4 @@ async function start() {
     fs.writeFileSync(path.join(__dirname, '../index.html'), htmlContent);
 }
 start();
+
