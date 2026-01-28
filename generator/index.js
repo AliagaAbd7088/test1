@@ -5,7 +5,7 @@ const cleanIPs = require('./ips.js');
 const subLinks = ["https://raw.githubusercontent.com/freefq/free/master/v2","https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub","https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2","https://raw.githubusercontent.com/AzadNetCH/Clash/main/V2Ray.txt"];
 const cnfLinks = ["https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/sub/sub_merge.txt","https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all"];
 
-const configDir = path.join(__dirname, '../configs');
+const configDir = path.join(__dirname, '../Configs');
 if (!fs.existsSync(configDir)) fs.mkdirSync(configDir);
 
 const toFa = (n) => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
@@ -163,4 +163,5 @@ async function start() {
     fs.writeFileSync(path.join(__dirname, '../index.html'), htmlContent);
 }
 start();
+
 
